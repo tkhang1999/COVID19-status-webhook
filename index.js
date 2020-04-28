@@ -1,5 +1,3 @@
-'use strict';
-
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
@@ -7,8 +5,8 @@ const bodyParser = require('body-parser');
 // creates http server
 const app = express().use(bodyParser.json());
 
+// get status of a country from COVID-19 API
 const responseCovidStatus = (res, country) => {
-    let result;
     let countryTotalUrl = "https://api.covid19api.com/total/country/";
     let url = countryTotalUrl + country;
     console.log('Country: ' + country);
@@ -26,6 +24,7 @@ const responseCovidStatus = (res, country) => {
     });
 }
 
+// return the most updated status
 const returnCovidStatus = (res, data) => {
     let status = data[data.length - 1];
     let textResponse = `Country: ${status['Country']}, ` + 
@@ -54,14 +53,17 @@ const returnCovidStatus = (res, data) => {
     return res.json(resObj);
 }
 
+// start the application
 app.listen(3000, () => console.log('[ChatBot] Webhook is listening'));
 
+// default get method
 app.get('/', (req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html');
     res.end('<html><body><h1>This is an Express Server</h1></body></html>');
 });
 
+// webhook API
 app.post('/webhook', (req, res) => {
     let country = req.body.queryResult.parameters['country'];
     responseCovidStatus(res, country);
