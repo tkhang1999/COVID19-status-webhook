@@ -11,7 +11,6 @@ const responseCovidStatus = (res, country) => {
     let url = countryTotalUrl + country;
     console.log('Country: ' + country);
 
-
     axios({
         method:'get',
         url
@@ -53,8 +52,9 @@ const returnCovidStatus = (res, data) => {
     return res.json(resObj);
 }
 
+port = process.env.PORT || 3000;
 // start the application
-app.listen(3000, () => console.log('[ChatBot] Webhook is listening'));
+app.listen(port, () => console.log('[ChatBot] Webhook is listening on port ' + port));
 
 // default get method
 app.get('/', (req, res) => {
