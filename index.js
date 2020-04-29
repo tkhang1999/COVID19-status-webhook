@@ -7,31 +7,50 @@ const app = express().use(bodyParser.json());
 
 // get status of a country from COVID-19 API
 const responseCovidStatus = (res, country) => {
-    let countryTotalUrl = "https://api.covid19api.com/total/country/";
-    let url = countryTotalUrl + country;
-    console.log('Country: ' + country);
+    if (country === 'global') {
+        const url = "https://api.covid19api.com/world/total";
 
-    axios({
-        method:'get',
-        url
-    })
-    .then((response) => {
-        returnCovidStatus(res, response.data);
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+        axios({
+            method:'get',
+            url
+        })
+        .then((response) => {
+            let status = response.data;
+            let textResponse = `Total Confirmed: ${status['TotalConfirmed']}, ` +
+                `Total Deaths: ${status['TotalDeaths']}, ` +
+                `Total Recovered: ${status['TotalRecovered']}`;
+            returnCovidStatus(res, textResponse);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    } else {
+        const countryTotalUrl = "https://api.covid19api.com/total/country/";
+        let url = countryTotalUrl + country;
+        console.log('Country: ' + country);
+    
+        axios({
+            method:'get',
+            url
+        })
+        .then((response) => {
+            let status = response.data[response.data.length - 1];
+            let textResponse = `Country: ${status['Country']}, ` + 
+                `Confirmed: ${status['Confirmed']}, ` +
+                `Deaths: ${status['Deaths']}, ` +
+                `Recovered: ${status['Recovered']}, ` +
+                `Updated Time: ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'})
+                    .format(new Date(Date.parse(status['Date'])))}`;
+            returnCovidStatus(res, textResponse);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 }
 
-// return the most updated status
-const returnCovidStatus = (res, data) => {
-    let status = data[data.length - 1];
-    let textResponse = `Country: ${status['Country']}, ` + 
-        `Confirmed: ${status['Confirmed']}, ` +
-        `Deaths: ${status['Deaths']}, ` +
-        `Recovered: ${status['Recovered']}, ` +
-        `Updated Time: ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'})
-            .format(new Date(Date.parse(status['Date'])))}`;
+// return the most updated status of a country
+const returnCovidStatus = (res, textResponse) => {
     let resObj = {
         "fulfillment_text": "",
         "fulfillmentMessages": [
