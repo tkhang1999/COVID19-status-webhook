@@ -35,17 +35,15 @@ Sample request body:
 Sample response:
 ```
 {
-    "fulfillment_text": "",
     "fulfillmentMessages": [
         {
             "text": {
                 "text": [
-                    "Country: Singapore, Confirmed: 14423, Deaths: 14, Recovered: 1095, Updated Time: Apr 27, 2020"
+                    "Country: Singapore, Confirmed: 15641, Deaths: 14, Recovered: 1188, Updated Time: Apr 29, 2020"
                 ]
             }
         }
-    ],
-    "source": ""
+    ]
 }
 ```
 
@@ -56,6 +54,8 @@ You can visit the web demo at [https://bot.dialogflow.com/covid19-status-chatbot
 Otherwise, you can have a try with the COVID19 Status Chatbot on Telegram at [t.me/COVID19_Status_Chatbot](t.me/COVID19_Status_Chatbot).
 
 For demo purposes, it only supports world status and 4 countries (Singapore, Vietnam, United States, and Australia) - my favorites.
+Because the webhook is deployed on a free dyno, it will sleep after a half hour of inactivity.
+Hence, if you do not receive any reply after a chat, please try one more time.
 
 <p align="center">
   <img src="./chatbot_demo.png" alt="Chatbot Demo" />

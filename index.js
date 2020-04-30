@@ -52,7 +52,6 @@ const responseCovidStatus = (res, country) => {
 // return the most updated status of a country
 const returnCovidStatus = (res, textResponse) => {
     let resObj = {
-        "fulfillment_text": "",
         "fulfillmentMessages": [
             {
                 "text": {
@@ -61,9 +60,8 @@ const returnCovidStatus = (res, textResponse) => {
                     ]
                 }
             }
-        ],
-        "source": ""
-    }
+        ]
+    };
 
     console.log('Text Response: ' + textResponse);
     console.log('Response Object: ' + JSON.stringify(resObj));
