@@ -49,9 +49,7 @@ Sample response:
 
 ## Chatbot Demo
 
-You can visit the web demo at [https://bot.dialogflow.com/covid19-status-chatbot](https://bot.dialogflow.com/covid19-status-chatbot).
-
-Otherwise, you can have a try with the COVID19 Status Chatbot on Telegram at [t.me/COVID19_Status_Chatbot](t.me/COVID19_Status_Chatbot).
+You can have a try with the COVID19 Status Chatbot on Telegram at [t.me/COVID19_Status_Chatbot](https://t.me/COVID19_Status_Chatbot).
 
 For demo purposes, it only supports world status and 4 countries (Singapore, Vietnam, United States, and Australia) - my favorites.
 Because the webhook is deployed on a free dyno, it will sleep after a half hour of inactivity.
