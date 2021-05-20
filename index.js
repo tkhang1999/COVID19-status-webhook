@@ -18,12 +18,18 @@ const responseCovidStatus = (res, country) => {
             let textResponse = `Total Confirmed: ${status['TotalConfirmed']} \r\n` +
                 `Total Deaths: ${status['TotalDeaths']} \r\n` +
                 `Total Recovered: ${status['TotalRecovered']}`;
-            let message = getCovidStatusMessage(textResponse);
-
-            return res.json(message);
+            return getCovidStatusMessage(textResponse);
         })
         .catch((error) => {
-            console.log(error);
+            // error logs
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            return getCovidStatusMessage("Something unexpectedly happened! Please try again!");
+        })
+        .then((message) => {
+            return res.json(message);
         });
     } else {
         const countryTotalUrl = "https://api.covid19api.com/total/country/";
@@ -45,12 +51,22 @@ const responseCovidStatus = (res, country) => {
                 `New cases: ${status['Confirmed'] - oldStatus['Confirmed']} \r\n` +
                 `Updated Time: ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'})
                     .format(new Date(Date.parse(status['Date'])))}`;
-            let message = getCovidStatusMessage(textResponse);
-
-            return res.json(message);
+            return getCovidStatusMessage(textResponse);
         })
         .catch((error) => {
-            console.log(error);
+            // error logs
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            if (error.response.status === 404) {
+                return getCovidStatusMessage("Country not found! Please try again!");
+            } else {
+                return getCovidStatusMessage("Something unexpectedly happened! Please try again!");
+            }
+        })
+        .then((message) => {
+            return res.json(message);
         });
     }
 }
@@ -68,9 +84,6 @@ const getCovidStatusMessage = (textResponse) => {
             }
         ]
     };
-
-    console.log('Text Response: ' + textResponse);
-    console.log('Response Object: ' + JSON.stringify(resObj));
 
     return resObj;
 }
