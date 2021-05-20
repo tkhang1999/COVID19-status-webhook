@@ -1,9 +1,8 @@
 const express = require('express');
 const axios = require('axios');
-const bodyParser = require('body-parser');
 
 // creates http server
-const app = express().use(bodyParser.json());
+const app = express().use(express.json());
 
 // get status of a country from COVID-19 API
 const responseCovidStatus = (res, country) => {
@@ -16,10 +15,12 @@ const responseCovidStatus = (res, country) => {
         })
         .then((response) => {
             let status = response.data;
-            let textResponse = `Total Confirmed: ${status['TotalConfirmed']}, ` +
-                `Total Deaths: ${status['TotalDeaths']}, ` +
+            let textResponse = `Total Confirmed: ${status['TotalConfirmed']} \r\n` +
+                `Total Deaths: ${status['TotalDeaths']} \r\n` +
                 `Total Recovered: ${status['TotalRecovered']}`;
-            returnCovidStatus(res, textResponse);
+            let message = getCovidStatusMessage(textResponse);
+
+            return res.json(message);
         })
         .catch((error) => {
             console.log(error);
@@ -35,13 +36,18 @@ const responseCovidStatus = (res, country) => {
         })
         .then((response) => {
             let status = response.data[response.data.length - 1];
-            let textResponse = `Country: ${status['Country']}, ` + 
-                `Confirmed: ${status['Confirmed']}, ` +
-                `Deaths: ${status['Deaths']}, ` +
-                `Recovered: ${status['Recovered']}, ` +
+            let oldStatus = response.data[response.data.length - 2];
+            let textResponse = `Country: ${status['Country']} \r\n` + 
+                `Confirmed: ${status['Confirmed']} \r\n` +
+                `Deaths: ${status['Deaths']} \r\n` +
+                `Recovered: ${status['Recovered']} \r\n` +
+                `Active: ${status['Active']} \r\n` + 
+                `New cases: ${status['Confirmed'] - oldStatus['Confirmed']} \r\n` +
                 `Updated Time: ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'})
                     .format(new Date(Date.parse(status['Date'])))}`;
-            returnCovidStatus(res, textResponse);
+            let message = getCovidStatusMessage(textResponse);
+
+            return res.json(message);
         })
         .catch((error) => {
             console.log(error);
@@ -50,7 +56,7 @@ const responseCovidStatus = (res, country) => {
 }
 
 // return the most updated status of a country
-const returnCovidStatus = (res, textResponse) => {
+const getCovidStatusMessage = (textResponse) => {
     let resObj = {
         "fulfillmentMessages": [
             {
@@ -66,7 +72,7 @@ const returnCovidStatus = (res, textResponse) => {
     console.log('Text Response: ' + textResponse);
     console.log('Response Object: ' + JSON.stringify(resObj));
 
-    return res.json(resObj);
+    return resObj;
 }
 
 port = process.env.PORT || 3000;
