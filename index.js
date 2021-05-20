@@ -101,6 +101,7 @@ app.get('/', (req, res) => {
 
 // webhook API
 app.post('/webhook', (req, res) => {
-    let country = req.body.queryResult.parameters['country'];
+    let country = req.body.queryResult.parameters['country']
+        .toString().replace(/\s+/g, '-').toLowerCase();
     responseCovidStatus(res, country);
 });
