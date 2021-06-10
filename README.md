@@ -39,7 +39,7 @@ Sample response:
         {
             "text": {
                 "text": [
-                    "Country: Singapore, Confirmed: 15641, Deaths: 14, Recovered: 1188, Updated Time: Apr 29, 2020"
+                    "Country: Singapore \r\nConfirmed: 62223 \r\nDeaths: 34 \r\nRecovered: 61740 \r\nActive: 483 \r\nNew cases: 13 \r\nUpdated Time: Jun 08, 2021"
                 ]
             }
         }
@@ -51,7 +51,7 @@ Sample response:
 
 You can have a try with the COVID19 Status Chatbot on Telegram at [t.me/COVID19_Status_Chatbot](https://t.me/COVID19_Status_Chatbot).
 
-For demo purposes, it only supports world status and 4 countries (Singapore, Vietnam, United States, and Australia) - my favorites.
+The bot is able to return the COVID19 status globally as well as for most countries. 
 Because the webhook is deployed on a free dyno, it will sleep after a half hour of inactivity.
 Hence, if you do not receive any reply after a chat, please try one more time.
 
