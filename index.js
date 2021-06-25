@@ -7,7 +7,7 @@ const app = express().use(express.json());
 // get status of a country from COVID-19 API
 const responseCovidStatus = (res, country) => {
     if (country === 'global') {
-        const url = "https://api.covid19api.com/world/total";
+        const url = "https://disease.sh/v3/covid-19/all";
 
         axios({
             method:'get',
@@ -15,9 +15,15 @@ const responseCovidStatus = (res, country) => {
         })
         .then((response) => {
             let status = response.data;
-            let textResponse = `Total Confirmed: ${status['TotalConfirmed']} \r\n` +
-                `Total Deaths: ${status['TotalDeaths']} \r\n` +
-                `Total Recovered: ${status['TotalRecovered']}`;
+            let textResponse = `Cases: ${numberWithCommas(status['cases'])} \r\n` +
+                `Today Cases: ${numberWithCommas(status['todayCases'])} \r\n\n` +
+                `Deaths: ${numberWithCommas(status['deaths'])} \r\n` +
+                `Today Deaths: ${numberWithCommas(status['todayDeaths'])} \r\n\n` +
+                `Recovered: ${numberWithCommas(status['recovered'])} \r\n` +
+                `Today Recovered: ${numberWithCommas(status['todayRecovered'])} \r\n\n` +
+                `Active: ${numberWithCommas(status['active'])} \r\n` + 
+                `Critical: ${numberWithCommas(status['critical'])} \r\n` +
+                `Tests: ${numberWithCommas(status['tests'])} \r\n`;
             return getCovidStatusMessage(textResponse);
         })
         .catch((error) => {
@@ -32,7 +38,7 @@ const responseCovidStatus = (res, country) => {
             return res.json(message);
         });
     } else {
-        const countryTotalUrl = "https://api.covid19api.com/total/country/";
+        const countryTotalUrl = "https://disease.sh/v3/covid-19/countries/";
         let url = countryTotalUrl + country;
         console.log('Country: ' + country);
     
@@ -41,16 +47,19 @@ const responseCovidStatus = (res, country) => {
             url
         })
         .then((response) => {
-            let status = response.data[response.data.length - 1];
-            let oldStatus = response.data[response.data.length - 2];
-            let textResponse = `Country: ${status['Country']} \r\n` + 
-                `Confirmed: ${status['Confirmed']} \r\n` +
-                `Deaths: ${status['Deaths']} \r\n` +
-                `Recovered: ${status['Recovered']} \r\n` +
-                `Active: ${status['Active']} \r\n` + 
-                `New cases: ${status['Confirmed'] - oldStatus['Confirmed']} \r\n` +
-                `Updated Time: ${new Intl.DateTimeFormat('en-US', {year: 'numeric', month: 'short', day: '2-digit'})
-                    .format(new Date(Date.parse(status['Date'])))}`;
+            let status = response.data;
+            let textResponse = `Country: ${numberWithCommas(status['country'])} \r\n\n` + 
+                `Cases: ${numberWithCommas(status['cases'])} \r\n` +
+                `Today Cases: ${numberWithCommas(status['todayCases'])} \r\n` +
+                `Deaths: ${numberWithCommas(status['deaths'])} \r\n` +
+                `Today Deaths: ${numberWithCommas(status['todayDeaths'])} \r\n\n` +
+                `Recovered: ${numberWithCommas(status['recovered'])} \r\n` +
+                `Today Recovered: ${numberWithCommas(status['todayRecovered'])} \r\n\n` +
+                `Active: ${numberWithCommas(status['active'])} \r\n` + 
+                `Critical: ${numberWithCommas(status['critical'])} \r\n` + 
+                `Tests: ${numberWithCommas(status['tests'])} \r\n\n` + 
+                `Updated Time: ${new Intl.DateTimeFormat('en-US', {dateStyle: 'medium', timeStyle: 'long'})
+                    .format(new Date(status['updated']))}`;
             return getCovidStatusMessage(textResponse);
         })
         .catch((error) => {
@@ -88,6 +97,11 @@ const getCovidStatusMessage = (textResponse) => {
     return resObj;
 }
 
+// format numbers with comma
+const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 port = process.env.PORT || 3000;
 // start the application
 app.listen(port, () => console.log('[ChatBot] Webhook is listening on port ' + port));
@@ -102,6 +116,6 @@ app.get('/', (req, res) => {
 // webhook API
 app.post('/webhook', (req, res) => {
     let country = req.body.queryResult.parameters['country']
-        .toString().replace(/\s+/g, '-').toLowerCase();
+        .toString().toLowerCase();
     responseCovidStatus(res, country);
 });
