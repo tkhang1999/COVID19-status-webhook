@@ -5,7 +5,7 @@ const axios = require('axios')
 const app = express().use(express.json())
 
 // get status of a country from COVID-19 API
-const responseCovidStatus = async (res, country) => {
+const getCovidStatus = async (country) => {
     let textResponse = ""
     let url = "https://disease.sh/v3/covid-19/countries/"
 
@@ -17,7 +17,7 @@ const responseCovidStatus = async (res, country) => {
         }
     
         let response = await axios({ method: 'get', url })
-        let status = await response.data
+        let status = response.data
     
         textResponse = `Country: ${status['country'] || 'Global'} \r\n` + 
             `Cases: ${numberWithCommas(status['cases'])} \r\n` +
@@ -32,14 +32,15 @@ const responseCovidStatus = async (res, country) => {
             `Updated: ${new Intl.DateTimeFormat('en-US', {dateStyle: 'medium', timeStyle: 'long'})
                 .format(new Date(status['updated']))}`
     } catch (error) {
-        // error logs        
+        // error logs
+        console.log(`Input country: ${country}`)        
         if (error.response) {
             console.log(error.response.data)
             console.log(error.response.status)
             console.log(error.response.headers)
     
             if (error.response.status === 404) {
-                textResponse = "Country not found! Try again?"
+                textResponse = "Country not found or doesn't have any cases! Try again?"
             } else {
                 textResponse = "Something unexpectedly happened! Again one more time?"
             }
@@ -48,12 +49,12 @@ const responseCovidStatus = async (res, country) => {
             textResponse = "Seem like I got a bug :(. One more time?"
         }
     } finally {
-        return res.json(getCovidStatusMessage(textResponse))
+        return formatCovidStatus(textResponse)
     }
 }
 
 // return the most updated status of a country
-const getCovidStatusMessage = (textResponse) => {
+const formatCovidStatus = (textResponse) => {
     let resObj = {
         "fulfillmentMessages": [
             {
@@ -89,5 +90,7 @@ app.get('/', (req, res) => {
 app.post('/webhook', (req, res) => {
     let country = req.body.queryResult.parameters['country']
         .toString().toLowerCase()
-    responseCovidStatus(res, country)
+    getCovidStatus(country).then(status => {
+        return res.json(status)
+    })
 })
