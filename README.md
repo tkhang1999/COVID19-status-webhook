@@ -4,7 +4,7 @@
 
 This is the Webhook service to feed the Dialogflow COVID19 Status Chatbot.
 Given an input country, it returns the COVID-19 status of that country by making a request to the 
-[COVID19 API](https://documenter.getpostman.com/view/10808728/SzS8rjbc?version=latest) provided by Postman.
+[COVID19 API](https://github.com/disease-sh/API) provided by **disease.sh**.
 
 ## Deployment
 
@@ -39,7 +39,7 @@ Sample response:
         {
             "text": {
                 "text": [
-                    "Country: Singapore \r\nConfirmed: 62223 \r\nDeaths: 34 \r\nRecovered: 61740 \r\nActive: 483 \r\nNew cases: 13 \r\nUpdated Time: Jun 08, 2021"
+                    "Country: Singapore \r\n\nCases: 62,493 \r\nToday Cases: 0 \r\n\nDeaths: 35 \r\nToday Deaths: 0 \r\n\nRecovered: 62,140 \r\nToday Recovered: 0 \r\n\nActive: 318 \r\nCritical: 4 \r\nTests: 13,287,834 \r\n\nUpdated Time: Jun 25, 2021, 11:34:46 AM GMT+8"
                 ]
             }
         }
