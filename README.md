@@ -3,7 +3,7 @@
 ## Introduction
 
 This is the Webhook service to feed the Dialogflow COVID19 Status Chatbot.
-Given an input country, it returns the COVID-19 status of that country by making a request to the 
+Given an input country, it returns the COVID-19 status of that country by making a request to the
 [COVID19 API](https://github.com/disease-sh/API) provided by **disease.sh**.
 
 ## Deployment
@@ -22,6 +22,7 @@ $ npm start
 You may make a POST request to the URL: `https://safe-bastion-98853.herokuapp.com/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
 
 Sample request body:
+
 ```
 {
     "queryResult": {
@@ -33,6 +34,7 @@ Sample request body:
 ```
 
 Sample response:
+
 ```
 {
     "fulfillmentMessages": [
@@ -51,7 +53,7 @@ Sample response:
 
 You can have a try with the COVID19 Status Chatbot on Telegram at [t.me/COVID19_Status_Chatbot](https://t.me/COVID19_Status_Chatbot).
 
-The bot is able to return the COVID19 status globally as well as for most countries. 
+The bot is able to return the COVID19 status globally as well as for most countries.
 Because the webhook is deployed on a free dyno, it will sleep after a half hour of inactivity.
 Hence, if you do not receive any reply after a chat, please try one more time.
 
