@@ -54,7 +54,7 @@ const getCovidStatus = async (country) => {
   }
 };
 
-// format webhook response object as defined in
+// return webhook response object in the format defined in
 // https://cloud.google.com/dialogflow/es/docs/fulfillment-webhook#webhook_response
 const formatWebhookResponse = (textResponse) => {
   const resObj = {
@@ -85,15 +85,19 @@ app.listen(port, () =>
 app.get("/", (req, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/html");
-  res.end("<html><body><h1>This is an Express Server</h1></body></html>");
+  res.end(
+    '<html><body><h1>This is an Express Server for <a href="https://github.com/tkhang1999/COVID19-status-webhook">COVID19-status-webhook</a></h1></body></html>'
+  );
 });
 
 // webhook API
-app.post("/webhook", (req, res) => {
-  let country = req.body.queryResult.parameters["country"]
+app.post("/webhook", async (req, res) => {
+  // webhook request object format is defined in
+  // https://cloud.google.com/dialogflow/es/docs/fulfillment-webhook?hl=en#webhook_request
+  const country = req.body.queryResult.parameters["country"]
     .toString()
     .toLowerCase();
-  getCovidStatus(country).then((status) => {
-    return res.json(status);
-  });
+  const status = await getCovidStatus(country);
+
+  return res.json(status);
 });
