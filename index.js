@@ -20,23 +20,28 @@ const getCovidStatus = async (country) => {
     ]);
     const [today, yesterday] = [todayResponse.data, yesterdayResponse.data];
     // enrich status data
+    const useYesterdayData =
+      today["todayCases"] === null &&
+      today["cases"] === yesterday["cases"] &&
+      today["todayDeaths"] === null &&
+      today["deaths"] === yesterday["deaths"] &&
+      today["todayRecovered"] === null &&
+      today["recovered"] === yesterday["recovered"];
     const status = {
       country: today["country"] || "Global",
       cases: today["cases"] || 0,
       deaths: today["deaths"] || 0,
       recovered: today["recovered"] || 0,
       newCases:
-        today["todayCases"] !== null
-          ? today["todayCases"]
-          : yesterday["todayCases"] || 0,
+        (!useYesterdayData ? today["todayCases"] : yesterday["todayCases"]) ||
+        0,
       newDeaths:
-        today["todayDeaths"] !== null
-          ? today["todayDeaths"]
-          : yesterday["todayDeaths"] || 0,
+        (!useYesterdayData ? today["todayDeaths"] : yesterday["todayDeaths"]) ||
+        0,
       newRecovered:
-        today["todayRecovered"] !== null
+        (!useYesterdayData
           ? today["todayRecovered"]
-          : yesterday["todayRecovered"] || 0,
+          : yesterday["todayRecovered"]) || 0,
       active: today["active"] || 0,
       critical: today["critical"] || 0,
       tests: today["tests"] || 0,
