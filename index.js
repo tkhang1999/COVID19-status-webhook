@@ -9,21 +9,48 @@ const getCovidStatus = async (country) => {
   let textResponse = "";
 
   try {
+    // get raw data from REST API
     const url =
       country === "global"
-        ? "https://disease.sh/v3/covid-19/all"
-        : `https://disease.sh/v3/covid-19/countries/${country}`;
-    const response = await axios({ method: "get", url });
-    const status = response.data;
-
+        ? "https://disease.sh/v3/covid-19/all?allowNull=true"
+        : `https://disease.sh/v3/covid-19/countries/${country}?allowNull=true`;
+    const [todayResponse, yesterdayResponse] = await Promise.all([
+      getStatus(url),
+      getStatus(url + "&yesterday=true"),
+    ]);
+    const [today, yesterday] = [todayResponse.data, yesterdayResponse.data];
+    // enrich status data
+    const status = {
+      country: today["country"] || "Global",
+      cases: today["cases"] || 0,
+      deaths: today["deaths"] || 0,
+      recovered: today["recovered"] || 0,
+      newCases:
+        today["todayCases"] !== null
+          ? today["todayCases"]
+          : yesterday["todayCases"] || 0,
+      newDeaths:
+        today["todayDeaths"] !== null
+          ? today["todayDeaths"]
+          : yesterday["todayDeaths"] || 0,
+      newRecovered:
+        today["todayRecovered"] !== null
+          ? today["todayRecovered"]
+          : yesterday["todayRecovered"] || 0,
+      active: today["active"] || 0,
+      critical: today["critical"] || 0,
+      tests: today["tests"] || 0,
+      updated: today["updated"],
+    };
+    // construct text response
     textResponse =
-      `Country: ${status["country"] || "Global"} \r\n` +
+      `Country: ${status["country"]} \r\n` +
       `Cases: ${numberWithCommas(status["cases"])} \r\n` +
       `Deaths: ${numberWithCommas(status["deaths"])} \r\n` +
       `Recovered: ${numberWithCommas(status["recovered"])} \r\n` +
-      `Today Cases: ${numberWithCommas(status["todayCases"])} \r\n` +
-      `Today Deaths: ${numberWithCommas(status["todayDeaths"])} \r\n` +
-      `Today Recovered: ${numberWithCommas(status["todayRecovered"])} \r\n` +
+      `New Cases: ${numberWithCommas(status["newCases"])} \r\n` +
+      `New Deaths: ${numberWithCommas(status["newDeaths"])} \r\n` +
+      `New Recovered: ${numberWithCommas(status["newRecovered"])} \r\n` +
       `Active: ${numberWithCommas(status["active"])} \r\n` +
       `Critical: ${numberWithCommas(status["critical"])} \r\n` +
       `Tests: ${numberWithCommas(status["tests"])} \r\n` +
@@ -54,6 +81,11 @@ const getCovidStatus = async (country) => {
   }
 };
 
+// get status from REST API
+const getStatus = (url) => {
+  return axios({ method: "get", url });
+};
+
 // return webhook response object in the format defined in
 // https://cloud.google.com/dialogflow/es/docs/fulfillment-webhook#webhook_response
 const formatWebhookResponse = (textResponse) => {
@@ -82,7 +114,7 @@ app.listen(port, () =>
 );
 
 // default get method
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/html");
   res.end(
