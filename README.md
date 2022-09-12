@@ -8,7 +8,7 @@ Given an input country, it returns the COVID-19 status of that country by making
 
 ## Deployment
 
-The service is deployed using Heroku at [https://safe-bastion-98853.herokuapp.com/](https://safe-bastion-98853.herokuapp.com/)
+The service is deployed using Heroku at [https://covid19-status-webhook.herokuapp.com/](https://covid19-status-webhook.herokuapp.com/)
 
 ## Host the service locally
 
@@ -19,7 +19,7 @@ $ npm start
 
 ## Make a POST request
 
-You may make a POST request to the URL: `https://safe-bastion-98853.herokuapp.com/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
+You may make a POST request to the URL: `https://covid19-status-webhook.herokuapp.com/` or `localhost:3000/webhook` (if hosted locally) using Postman.
 
 Sample request body:
 
