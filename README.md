@@ -19,7 +19,7 @@ $ npm start
 
 ## Make a POST request
 
-You may make a POST request to the URL: `https://covid19-status-webhook.herokuapp.com/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
+You may make a POST request to the URL: `https://covid19-status-webhook.onrender.com/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
 
 Sample request body:
 
