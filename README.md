@@ -8,7 +8,7 @@ Given an input country, it returns the COVID-19 status of that country by making
 
 ## Deployment
 
-The service is deployed using Heroku at [https://covid19-status-webhook.herokuapp.com/](https://covid19-status-webhook.herokuapp.com/)
+The service is deployed at [https://covid19-status-webhook.onrender.com](https://covid19-status-webhook.onrender.com)
 
 ## Host the service locally
 
