@@ -8,7 +8,7 @@ Given an input country, it returns the COVID-19 status of that country by making
 
 ## Deployment
 
-The service is deployed at [https://covid19-status-webhook.onrender.com](https://covid19-status-webhook.onrender.com)
+The service is deployed at [https://covid19statuswebhook-yu781szi.b4a.run/](https://covid19statuswebhook-yu781szi.b4a.run/)
 
 ## Host the service locally
 
@@ -19,7 +19,7 @@ $ npm start
 
 ## Make a POST request
 
-You may make a POST request to the URL: `https://covid19-status-webhook.onrender.com/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
+You may make a POST request to the URL: `https://covid19statuswebhook-yu781szi.b4a.run/webhook` or `localhost:3000/webhook` (if hosted locally) using Postman.
 
 Sample request body:
 
